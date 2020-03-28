@@ -2,6 +2,8 @@ import pyxel
 
 from chp01_vectors.bouncingball_vectors.pyvector import Vector
 
+RATIO = 0.5
+
 
 class Engine:
     def __init__(self, width, height):
@@ -11,10 +13,12 @@ class Engine:
         self.center = Vector(width / 2, height / 2)
 
     def update(self, x, y):
-        self.position.x = x*0.5
-        self.position.y = y*0.5
-        #self.position.mult(0.5)
-        print(f'{self.position.x} {self.position.y} {pyxel.mouse_x} {pyxel.mouse_y}')
+        x_local = x - self.center.x
+        y_local = y - self.center.y
+        vector_local = Vector(x_local, y_local)
+        vector_local.mult(0.5)
+        vector_local.add(self.center)
+        self.position = vector_local
 
 
 class App:
@@ -36,6 +40,8 @@ class App:
             self.engine.position.y,
             8
         )
+        msg = f'M {pyxel.mouse_x} {pyxel.mouse_y} P {self.engine.position.x} {self.engine.position.y}'
+        pyxel.text(0, 0, msg, 8)
 
 
 if __name__ == '__main__':
